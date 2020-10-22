@@ -113,7 +113,7 @@
         <div class="form-group col-md-9">
             <label for="inputState">Câu trả lời đúng: </label>
             <select id="right_answer" class="form-control">
-                <option selected>Choose...</option>
+                <option value="NaN" selected>Choose...</option>
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <option value="C">C</option>
@@ -151,6 +151,7 @@
     <div class="btn-group col-md-9" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-secondary" id="prev">Trước đó</button>
         <button type="button" class="btn btn-secondary" id="next">Kế tiếp</button>
+        <button type="button" class="btn btn-secondary" id="add">Thêm</button>
     </div>
 
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -228,10 +229,33 @@
     }
 
     $(document).ready(function () {
-        let data = [];
+        {#let data = [];#}
 
         $("#export").click(function () {
-            console.log(data);
+            let race_data = {};
+            race_data['author'] = $("#author").val();
+            race_data['content'] = $("#passage").val();
+            race_data['content'] = $("#passage").val();
+            race_data['questions'] = JSON.parse($("#ques").val());
+            race_data['title'] = $("#title").val();
+            race_data['isProse'] = true;
+
+            console.log(race_data);
+
+            let file;
+            let properties = {type: 'text/json'};
+
+            try {
+              // Specify the filename using the File constructor, but ...
+              {#file = new File([JSON.stringify(race_data)], "file.json", properties);#}
+                file = new Blob([JSON.stringify(race_data)], properties);
+            } catch (e) {
+              // ... fall back to the Blob constructor if that isn't supported.
+              console.log(e);
+
+            }
+            let url = URL.createObjectURL(file);
+            window.open(url, '_blank');
         });
 
         $("#next").click(function () {
@@ -240,6 +264,8 @@
 
             let ques = $("#ques").val();
             let ques_number = parseInt($("#ques_number").val());
+
+            console.log(curr);
 
             if (curr < ques_number) {
                 $("#question").val(JSON.parse(ques)[curr]['question']);
@@ -259,6 +285,45 @@
 
                 $("#ques_index").val(curr);
             }
+            else {
+                $("#question").val("");
+                for (let i = 0; i < 4; i++) {
+                    $("#option"+(i+1)).val("");
+                }
+                $("#right_answer option[value='NaN']").attr('selected','selected');
+                console.log(ques_number);
+            }
+        });
+
+        $("#add").click(function () {
+            let curr_ques = JSON.parse($("#ques").val());
+            let tmp_q = {};
+            tmp_q['question'] = $("#question").val();
+
+            let tmp_ops = [];
+            tmp_ops.push({'A': $("#option1").val()});
+            tmp_ops.push({'B': $("#option2").val()});
+            tmp_ops.push({'C': $("#option3").val()});
+            tmp_ops.push({'D': $("#option4").val()});
+
+            tmp_q['options'] = tmp_ops;
+            tmp_q['answer'] = $("#right_answer").val();
+
+            let tmp_rs = [];
+            tmp_rs.push({'Matching': $("#rs1").is(':checked')});
+            tmp_rs.push({'Paraphrasing': $("#rs2").is(':checked')});
+            tmp_rs.push({'Single-sentence Reasoning': $("#rs3").is(':checked')});
+            tmp_rs.push({'Multi-sentence Reasoning': $("#rs4").is(':checked')});
+            tmp_rs.push({'Ambiguous Or Insufficient': $("#rs5").is(':checked')});
+
+            curr_ques.push(tmp_q);
+
+            tmp_q['types'] = tmp_rs;
+
+            $("#ques").val(JSON.stringify(curr_ques));
+
+            console.log($("#ques").val());
+            $("#ques_number").val(curr_ques.length);
         });
 
         $("#prev").click(function () {
@@ -266,7 +331,6 @@
             curr = parseInt(curr) - 1;
 
             let ques = $("#ques").val();
-            let ques_number = parseInt($("#ques_number").val());
 
             if (curr >= 0) {
                 $("#question").val(JSON.parse(ques)[curr]['question']);
