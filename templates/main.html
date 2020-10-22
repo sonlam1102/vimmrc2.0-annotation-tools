@@ -234,11 +234,11 @@
         $("#export").click(function () {
             let race_data = {};
             race_data['author'] = $("#author").val();
-            race_data['content'] = $("#passage").val();
-            race_data['content'] = $("#passage").val();
+            race_data['grade'] = $("#grade").val();
             race_data['questions'] = JSON.parse($("#ques").val());
             race_data['title'] = $("#title").val();
             race_data['isProse'] = true;
+            race_data['content'] = $("#passage").val();
 
             console.log(race_data);
 
