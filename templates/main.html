@@ -115,7 +115,7 @@
         <div class="form-group col-md-9">
             <label for="inputState">Câu trả lời đúng: </label>
             <select id="right_answer" class="form-control">
-                <option value="NaN" selected>Choose...</option>
+                <option value="default" selected>Choose...</option>
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <option value="C">C</option>
@@ -274,11 +274,12 @@
                     $("#option"+(i+1)).val(Object.entries(options[i])[0][1]);
                 }
 
-                $("#right_answer option[value="+JSON.parse(ques)[curr]['answer']+"]").attr('selected','selected');
+                $("#right_answer").val(JSON.parse(ques)[curr]['answer']);
+                {#$("#right_answer option[value="+JSON.parse(ques)[curr]['answer']+"]").attr('selected','selected');#}
 
                 let types = JSON.parse(ques)[curr]['types'];
                 for(let i = 0; i < types.length; i++) {
-                    $("#rs"+(i+1)).attr('checked', Object.entries(types[i])[0][1]);
+                    $("#rs"+(i+1)).attr('checked', Object.entries(types[i])[0][1] === true ? 'checked' : '');
                 }
 
                 $("#ques_index").val(curr);
@@ -288,7 +289,7 @@
                 for (let i = 0; i < 4; i++) {
                     $("#option"+(i+1)).val("");
                 }
-                $("#right_answer option[value='NaN']").attr('selected','selected');
+                $("#right_answer").val('default');
                 console.log(ques_number);
             }
         });
@@ -331,6 +332,12 @@
             $("#ques_number").val(curr_ques.length);
 
             alert("Đã thêm");
+            $("#question").val("");
+            for (let i = 0; i < 4; i++) {
+                $("#option" + (i + 1)).val("");
+            }
+            $("#right_answer").val('default');
+            console.log(ques_number);
         });
 
         $("#prev").click(function () {
@@ -338,6 +345,8 @@
             curr = parseInt(curr) - 1;
 
             let ques = $("#ques").val();
+
+            console.log(curr);
 
             if (curr >= 0) {
                 $("#question").val(JSON.parse(ques)[curr]['question']);
@@ -348,11 +357,13 @@
                     $("#option"+(i+1)).val(Object.entries(options[i])[0][1]);
                 }
 
-                $("#right_answer option[value="+JSON.parse(ques)[curr]['answer']+"]").attr('selected','selected');
+                $("#right_answer").val(JSON.parse(ques)[curr]['answer']);
+
+                {#$("#right_answer option[value="+JSON.parse(ques)[curr]['answer']+"]").attr('selected','selected');#}
 
                 let types = JSON.parse(ques)[curr]['types'];
                 for(let j = 0; j < types.length; j++) {
-                    $("#rs"+(j+1)).attr('checked', Object.entries(types[j])[0][1]);
+                    $("#rs"+(j+1)).attr('checked', Object.entries(types[j])[0][1] === true ? 'checked' : '');
                 }
 
                 $("#ques_index").val(curr);
