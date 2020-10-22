@@ -246,13 +246,9 @@
             let properties = {type: 'text/json'};
 
             try {
-              // Specify the filename using the File constructor, but ...
-              {#file = new File([JSON.stringify(race_data)], "file.json", properties);#}
                 file = new Blob([JSON.stringify(race_data)], properties);
             } catch (e) {
-              // ... fall back to the Blob constructor if that isn't supported.
               console.log(e);
-
             }
             let url = URL.createObjectURL(file);
             window.open(url, '_blank');
@@ -296,7 +292,14 @@
         });
 
         $("#add").click(function () {
-            let curr_ques = JSON.parse($("#ques").val());
+            let curr_ques;
+            if ($("#ques").val()) {
+                curr_ques = JSON.parse($("#ques").val());
+            }
+            else {
+                curr_ques = []
+            }
+
             let tmp_q = {};
             tmp_q['question'] = $("#question").val();
 
@@ -324,6 +327,8 @@
 
             console.log($("#ques").val());
             $("#ques_number").val(curr_ques.length);
+
+            alert("Đã thêm");
         });
 
         $("#prev").click(function () {
