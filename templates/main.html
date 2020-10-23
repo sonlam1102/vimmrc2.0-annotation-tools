@@ -167,6 +167,19 @@
 <label id="ques_number" hidden></label>
 </html>
 <script>
+    function saveFile(name, type, data) {
+        if (data != null && navigator.msSaveBlob)
+            return navigator.msSaveBlob(new Blob([data], {type: type}), name);
+        var a = $("<a style='display: none;'/>");
+        var url = window.URL.createObjectURL(new Blob([data], {type: type}));
+        a.attr("href", url);
+        a.attr("download", name);
+        $("body").append(a);
+        a[0].click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    }
+
     function dispFile(contents) {
         {#document.getElementById('contents').innerHTML = contents;#}
         let data = JSON.parse(contents);
@@ -244,16 +257,8 @@
 
             console.log(race_data);
 
-            let file;
-            let properties = {type: 'text/json'};
+            saveFile("mrc_annotated.json", "data:attachment/json", JSON.stringify(race_data));
 
-            try {
-                file = new Blob([JSON.stringify(race_data)], properties);
-            } catch (e) {
-              console.log(e);
-            }
-            let url = URL.createObjectURL(file);
-            window.open(url, '_blank');
         });
 
         $("#next").click(function () {
