@@ -265,6 +265,9 @@
 
             console.log(curr);
 
+            if (curr >= ques.length)
+                curr = ques.length - 1;
+
             if (curr < ques_number) {
                 $("#question").val(JSON.parse(ques)[curr]['question']);
 
@@ -330,6 +333,7 @@
 
             console.log($("#ques").val());
             $("#ques_number").val(curr_ques.length);
+            $("#ques_index").val(curr_ques.length);
 
             alert("Đã thêm");
             $("#question").val("");
@@ -338,11 +342,14 @@
             }
             $("#right_answer").val('default');
             console.log(ques_number);
+
         });
 
         $("#prev").click(function () {
             let curr = $("#ques_index").val();
             curr = parseInt(curr) - 1;
+
+            if (curr < 0) curr = 0;
 
             let ques = $("#ques").val();
 
