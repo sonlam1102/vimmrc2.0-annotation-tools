@@ -287,7 +287,13 @@
 
                 let types = JSON.parse(ques)[curr]['types'];
                 for(let i = 0; i < types.length; i++) {
-                    $("#rs"+(i+1)).attr('checked', Object.entries(types[i])[0][1] === true ? 'checked' : '');
+                    if(Object.values(types[i])[0] === true) {
+                        $("#rs"+(i+1)).prop('checked', true);
+                    }
+                    else{
+                        $("#rs"+(i+1)).prop('checked', false);
+                    }
+
                 }
 
                 $("#ques_index").val(curr);
@@ -299,6 +305,10 @@
                 }
                 $("#right_answer").val('default');
                 console.log(ques_number);
+
+                for(let j = 0; j < 5; j++) {
+                    $("#rs" + (j + 1)).prop('checked', false);
+                }
             }
         });
 
@@ -347,7 +357,9 @@
             }
             $("#right_answer").val('default');
             console.log(ques_number);
-
+            for(let j = 0; j < 5; j++) {
+                $("#rs" + (j + 1)).prop('checked', false);
+            }
         });
 
         $("#prev").click(function () {
@@ -375,7 +387,12 @@
 
                 let types = JSON.parse(ques)[curr]['types'];
                 for(let j = 0; j < types.length; j++) {
-                    $("#rs"+(j+1)).attr('checked', Object.entries(types[j])[0][1] === true ? 'checked' : '');
+                    if (Object.values(types[j])[0] === true) {
+                        $("#rs"+(j+1)).prop('checked', true);
+                    }
+                    else {
+                        $("#rs"+(j+1)).prop('checked', false);
+                    }
                 }
 
                 $("#ques_index").val(curr);
