@@ -162,6 +162,7 @@
         <button type="button" class="btn btn-secondary" id="prev">Trước đó</button>
         <button type="button" class="btn btn-secondary" id="next">Kế tiếp</button>
         <button type="button" class="btn btn-secondary" id="add">Thêm</button>
+        <button type="button" class="btn btn-secondary" id="update">Cập nhật</button>
     </div>
 
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -406,5 +407,43 @@
                 $("#ques_index").val(curr);
             }
         });
+    });
+
+
+    {#$("input[name='reasoning_type']").change(function () {#}
+    $("#update").click(function () {
+        let curr = $("#ques_index").val();
+        let ques = $("#ques").val();
+
+        let list_ques = JSON.parse(ques);
+
+        let tmp_q = {};
+        tmp_q['question'] = $("#question").val();
+
+        let tmp_ops = [];
+        tmp_ops.push({'A': $("#option1").val()});
+        tmp_ops.push({'B': $("#option2").val()});
+        tmp_ops.push({'C': $("#option3").val()});
+        tmp_ops.push({'D': $("#option4").val()});
+
+        tmp_q['options'] = tmp_ops;
+        tmp_q['answer'] = $("#right_answer").val();
+
+        let tmp_rs = [];
+        tmp_rs.push({'Matching': $("#rs1").is(':checked')});
+        tmp_rs.push({'Paraphrasing': $("#rs2").is(':checked')});
+        tmp_rs.push({'Single-sentence Reasoning': $("#rs3").is(':checked')});
+        tmp_rs.push({'Multi-sentence Reasoning': $("#rs4").is(':checked')});
+        tmp_rs.push({'Ambiguous Or Insufficient': $("#rs5").is(':checked')});
+
+        tmp_q['types'] = tmp_rs;
+        list_ques[curr] = tmp_q;
+
+        console.log(curr);
+        console.log(list_ques);
+
+        $("#ques").val(JSON.stringify(list_ques));
+
+        alert("Đã cập nhật");
     });
 </script>
