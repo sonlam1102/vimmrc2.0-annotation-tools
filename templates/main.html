@@ -66,12 +66,12 @@
                 <label for="comment">Thể loại:</label>
                 <div>
                     <div class="form-check form-check">
-                        <input class="form-check-input" type="radio" name="passage_type" value="văn bản">
-                        <label class="form-check-label" for="inlineRadio1">Thơ</label>
+                        <input class="form-check-input" id="isLit" type="radio" name="passage_type" value="văn bản">
+                        <label class="form-check-label" for="inlineRadio1">Văn bản</label>
                     </div>
                     <div class="form-check form-check">
-                        <input class="form-check-input" type="radio" name="passage_type" value="thơ">
-                        <label class="form-check-label" for="inlineRadio2">Văn bản</label>
+                        <input class="form-check-input" id="isPose" type="radio" name="passage_type" value="thơ">
+                        <label class="form-check-label" for="inlineRadio2">Thơ</label>
                     </div>
                 </div>
             </div>
@@ -188,7 +188,18 @@
         window.URL.revokeObjectURL(url);
         a.remove();
     }
+    function stringToSlug(str) {
+        // remove accents
+        var from = "àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ",
+            to   = "aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyy";
+        for (var i=0, l=from.length ; i < l ; i++) {
+            str = str.replace(RegExp(from[i], "gi"), to[i]);
+        }
 
+        str = str.trim()
+
+        return str;
+    }
     function dispFile(contents) {
         {#document.getElementById('contents').innerHTML = contents;#}
         let data = JSON.parse(contents);
@@ -208,6 +219,11 @@
         $("#question").val(JSON.parse($("#ques").val())[$("#ques_index").val()]['question']);
 
         let options = JSON.parse($("#ques").val())[$("#ques_index").val()]['options'];
+
+        if (data['isProse'] === true)
+            $("#isPose").prop('checked', true);
+        else
+            $("#isLit").prop('checked', true);
 
         for (let i = 0; i < options.length; i++) {
             $("#option"+(i+1)).val(Object.entries(options[i])[0][1]);
@@ -261,12 +277,14 @@
             race_data['grade'] = $("#grade").val();
             race_data['questions'] = JSON.parse($("#ques").val());
             race_data['title'] = $("#title").val();
-            race_data['isProse'] = true;
+            race_data['isProse'] = $("#isPose").is(':checked');
             race_data['content'] = $("#passage").val();
 
             console.log(race_data);
 
-            saveFile("mrc_annotated.json", "data:attachment/json", JSON.stringify(race_data));
+            let filename = "MCTest_"+$("#grade").val()+"_"+ stringToSlug($("#title").val())+'_annotated.json'
+
+            saveFile(filename, "data:attachment/json", JSON.stringify(race_data));
 
         });
 
