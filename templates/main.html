@@ -167,7 +167,8 @@
 
     <div class="btn-group" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-secondary" id="load" onclick="openFile(dispFile)">Load data</button>
-        <button type="button" class="btn btn-secondary" id="export">Export data</button>
+        <button type="button" class="btn btn-secondary" id="export">Lưu lại</button>
+        <button type="button" class="btn btn-secondary" id="reload">Làm mới</button>
     </div>
 </div>
 </body>
@@ -463,5 +464,9 @@
         $("#ques").val(JSON.stringify(list_ques));
 
         alert("Đã cập nhật");
+    });
+
+    $("#reload").click(function () {
+        location.reload(true);
     });
 </script>
